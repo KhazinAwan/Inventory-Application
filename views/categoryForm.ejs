@@ -1,0 +1,39 @@
+<%- include("partials/header") %>
+
+<% const isEditing = typeof category !== "undefined"; %>
+
+<main class="container">
+    <h1><%= isEditing ? "Edit Category" : "Add Category" %></h1>
+
+    <form
+        action="<%= isEditing ? `/categories/${category.id}/update` : '/categories/new' %>"
+        method="POST"
+    >
+        <div>
+            <label for="name">Category Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="<%= isEditing ? category.name : '' %>"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                name="description"
+            ><%= isEditing ? category.description || '' : '' %></textarea>
+        </div>
+
+        <button type="submit">
+            <%= isEditing ? "Update Category" : "Create Category" %>
+        </button>
+    </form>
+
+    <a href="/categories">Cancel</a>
+</main>
+
+<%- include("partials/footer") %>
