@@ -1,0 +1,40 @@
+<%- include("partials/header") %>
+
+<main>
+
+    <h1>Our Categories</h1>
+    <a href="categories/new">Add New Category</a>
+
+    <% if(categories.length == 0) { %>
+
+        <p>No categories available yet.</p>
+
+    <% } else { %>
+
+        <div class="category-list">
+            
+            <% categories.forEach((category) => { %>
+
+                <article class="category-card">
+
+                    <h2>
+                        <a href="/categories/<%= category.id %>">
+                            <%= category.name %>
+                        </a>
+                    </h2>
+
+                    <p>
+                        <%= category.description %>
+                    </p>
+
+                </article>
+
+            <% }) %>
+
+        </div>
+
+    <% } %>
+
+</main>
+
+<%- include("partials/footer") %>

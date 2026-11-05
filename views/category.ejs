@@ -1,0 +1,24 @@
+<%- include("partials/header") %>
+
+<main class="container">
+    <h1><%= category.name %></h1>
+
+    <p><%= category.description %></p>
+
+    <div class="category-actions">
+        <a href="/categories/<%= category.id %>/items">
+            View Items
+        </a>
+
+        <a href="/categories/<%= category.id %>/update">
+            Edit Category
+        </a>
+
+        <form action="/categories/<%= category.id %>/delete" method="POST"
+              onsubmit="return confirm('Are you sure? Deleting this category will also delete all its items.');">
+            <button type="submit">Delete Category</button>
+        </form>
+    </div>
+</main>
+
+<%- include("partials/footer") %>
