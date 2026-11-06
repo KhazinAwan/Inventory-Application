@@ -17,6 +17,10 @@ app.use("/categories", categoryRouter);
 app.use("/items", itemRouter);
 app.use("/", indexRouter);  
 
+app.use((req, res) => {
+    res.status(404).render("404");
+});
+
 const PORT = 3000;
 app.listen(PORT, (error) => {
   if (error) {
