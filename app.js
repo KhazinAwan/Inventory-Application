@@ -21,6 +21,12 @@ app.use((req, res) => {
     res.status(404).render("404");
 });
 
+app.use((err, req, res, next) => {
+    res.status(500).render("error", {
+        message: "Something went wrong on our server. Please try again later."
+    });
+});
+
 const PORT = 3000;
 app.listen(PORT, (error) => {
   if (error) {
