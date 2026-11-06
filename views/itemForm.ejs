@@ -1,9 +1,15 @@
 <%- include("partials/header") %>
 
-<% const isEditing = typeof item !== "undefined"; %>
-
 <main class="container">
     <h1><%= isEditing ? "Edit Item" : "Add Item" %></h1>
+
+    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+        <ul class="errors">
+            <% errors.forEach((error) => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
 
     <form
         action="<%= isEditing ? `/items/${item.id}/update` : '/items/new' %>"
@@ -17,7 +23,7 @@
                 <% categories.forEach((category) => { %>
                     <option
                         value="<%= category.id %>"
-                        <%= isEditing && item.category_id === category.id ? "selected" : "" %>
+                        <%= item && item.category_id == category.id ? "selected" : "" %>
                     >
                         <%= category.name %>
                     </option>
@@ -31,7 +37,7 @@
                 type="text"
                 id="name"
                 name="name"
-                value="<%= isEditing ? item.name : '' %>"
+                value="<%= item ? item.name : '' %>"
                 required
             >
         </div>
@@ -41,7 +47,7 @@
             <textarea
                 id="description"
                 name="description"
-            ><%= isEditing ? item.description || '' : '' %></textarea>
+            ><%= item ? item.description || '' : '' %></textarea>
         </div>
 
         <div>
@@ -52,7 +58,7 @@
                 name="stock"
                 min="0"
                 step="1"
-                value="<%= isEditing ? item.stock : '' %>"
+                value="<%= item ? item.stock : '' %>"
                 required
             >
         </div>
@@ -65,7 +71,7 @@
                 name="price"
                 min="0"
                 step="0.01"
-                value="<%= isEditing ? item.price : '' %>"
+                value="<%= item ? item.price : '' %>"
                 required
             >
         </div>
@@ -76,7 +82,7 @@
                 type="url"
                 id="image_url"
                 name="image_url"
-                value="<%= isEditing ? item.image_url || '' : '' %>"
+                value="<%= item ? item.image_url || '' : '' %>"
             >
         </div>
 

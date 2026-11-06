@@ -1,3 +1,4 @@
+const { validationResult, matchedData } = require("express-validator");
 const db = require("../db/queries.js");
 
 async function getAllItems(req, res) {
@@ -36,13 +37,32 @@ async function getCategoryItems(req, res) {
 async function createItemGet(req, res) {
 
     const categories = await db.getAllCategories();
-    res.render("itemForm" , {categories: categories})
+    res.render("itemForm" , {
+        categories: categories,
+        isEditing: false
+    })
 }
 
 async function createItemPost(req, res) {
 
-    const {category_id, name, description, stock, price, image_url} = req.body;
-    await db.createItem(category_id, name, description, stock, price, image_url);
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+
+        const categories = await db.getAllCategories();
+
+        return res.status(400).render("itemForm" , {
+
+            errors: errors.array(),
+            item: req.body,
+            categories,
+            isEditing: false
+
+        })
+    }
+
+    const {category_id, name, description, stock, price, image_url} = matchedData(req);
+    await db.createItem(Number(category_id), name, description, Number(stock), Number(price), image_url);
     res.redirect("/items");
 }
 
@@ -57,14 +77,34 @@ async function updateItemGet(req, res) {
     }
 
     const categories = await db.getAllCategories();
-    res.render("itemForm" , {item: item, categories: categories})
+    res.render("itemForm" , {
+        item: item,
+        categories: categories,
+        isEditing: true
+    })
 }
 
 async function updateItemPost(req, res) {
 
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+
+        const categories = await db.getAllCategories();
+
+        return res.status(400).render("itemForm" , {
+
+            errors: errors.array(),
+            item: { ...req.body, id},
+            categories,
+            isEditing: true
+
+        })
+    }
+
     const {id} = req.params;
-    const {category_id, name, description, stock, price, image_url} = req.body;
-    const item = await db.updateItem(id, category_id, name, description, stock, price, image_url);
+    const {category_id, name, description, stock, price, image_url} = matchedData(req);
+    const item = await db.updateItem(id, Number(category_id), name, description, Number(stock), Number(price), image_url);
 
     if(!item) {
 

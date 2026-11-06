@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
 const categoryValidation = [
-    
+
     body("name")
         .trim()
         .notEmpty()
@@ -10,6 +10,7 @@ const categoryValidation = [
         .withMessage("Category name must be 255 characters or fewer"),
 
     body("description")
+        .optional()
         .trim()
         .isLength({ max: 255 })
         .withMessage("Description must be 255 characters or fewer"),
