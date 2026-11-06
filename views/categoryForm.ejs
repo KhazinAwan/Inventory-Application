@@ -1,9 +1,16 @@
 <%- include("partials/header") %>
 
-<% const isEditing = typeof category !== "undefined"; %>
-
 <main class="container">
+
     <h1><%= isEditing ? "Edit Category" : "Add Category" %></h1>
+
+    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+    <ul class="errors">
+        <% errors.forEach((error) => { %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
+    <% } %>
 
     <form
         action="<%= isEditing ? `/categories/${category.id}/update` : '/categories/new' %>"
@@ -15,7 +22,7 @@
                 type="text"
                 id="name"
                 name="name"
-                value="<%= isEditing ? category.name : '' %>"
+                value="<%= category ? category.name : '' %>"
                 required
             >
         </div>
@@ -25,7 +32,7 @@
             <textarea
                 id="description"
                 name="description"
-            ><%= isEditing ? category.description || '' : '' %></textarea>
+            ><%= category ? category.description || '' : '' %></textarea>
         </div>
 
         <button type="submit">
