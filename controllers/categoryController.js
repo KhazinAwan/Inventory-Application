@@ -14,7 +14,7 @@ async function getCategoryById(req, res) {
 
     if(!category) {
 
-        return res.status(404).send("Category not found.");
+        return res.status(404).render("404");
     }
 
     res.render("category" , {category: category});
@@ -53,7 +53,7 @@ async function updateCategoryGet(req, res) {
 
     if(!category) {
 
-        return res.status(404).send("Category not found.");
+        return res.status(404).render("404");
     }
 
     res.render("categoryForm" , {
@@ -83,7 +83,7 @@ async function updateCategoryPost(req, res) {
 
     if(!category) {
 
-        return res.status(404).send("Category not found.")
+        return res.status(404).render("404");
     }
         
     res.redirect("/categories");
@@ -96,7 +96,7 @@ async function deleteCategory(req, res) {
     const category = await db.deleteCategory(id);
 
     if(!category) {
-        res.status(404).send("Category not found.")
+        res.status(404).render("404");
     }
 
     res.redirect("/categories");

@@ -14,7 +14,7 @@ async function getItemById(req, res) {
 
     if(!item) {
 
-        res.status(404).send("Item not found.");
+        res.status(404).render("404");
     }
 
     res.render("item" , {item: item});
@@ -27,7 +27,7 @@ async function getCategoryItems(req, res) {
 
     if(!category) {
 
-        res.status(404).send("Category not found.");
+        res.status(404).render("404");
     }
 
     const items = await db.getCategoryItems(id);
@@ -73,7 +73,7 @@ async function updateItemGet(req, res) {
 
     if(!item) {
 
-        res.status(404).send("Item not found.");
+        res.status(404).render("404");
     }
 
     const categories = await db.getAllCategories();
@@ -108,7 +108,7 @@ async function updateItemPost(req, res) {
 
     if(!item) {
 
-        res.status(404).send("Item not found.");
+        res.status(404).render("404");
     }
 
     res.redirect("/items");
@@ -121,7 +121,7 @@ async function deleteItem(req, res) {
 
     if(!item) {
 
-        res.status(404).send("Item not found.");
+        res.status(404).render("404");
     }
 
     res.redirect("/items");
