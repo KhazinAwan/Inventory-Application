@@ -1,13 +1,15 @@
 <%- include("partials/header") %>
 
-<main>
+<main class="container">
 
-    <h1>Our Categories</h1>
-    <a href="categories/new">Add New Category</a>
+    <div class="page-header">
+       <h1>Our Categories</h1>
+        <a href="categories/new" class="btn">Add New Category</a>
+    </div> 
 
     <% if(categories.length == 0) { %>
 
-        <p>No categories available yet.</p>
+        <p class="empty-message">No categories available yet.</p>
 
     <% } else { %>
 

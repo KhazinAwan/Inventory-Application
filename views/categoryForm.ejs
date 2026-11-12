@@ -1,15 +1,15 @@
 <%- include("partials/header") %>
 
-<main class="container">
+<main class="container form-page">
 
     <h1><%= isEditing ? "Edit Category" : "Add Category" %></h1>
 
     <% if (typeof errors !== "undefined" && errors.length > 0) { %>
-    <ul class="errors">
+    <div class="errors">
         <% errors.forEach((error) => { %>
-            <li><%= error.msg %></li>
+            <p><%= error.msg %></p>
         <% }) %>
-    </ul>
+    </div>
     <% } %>
 
     <form
@@ -35,12 +35,18 @@
             ><%= category ? category.description || '' : '' %></textarea>
         </div>
 
-        <button type="submit">
-            <%= isEditing ? "Update Category" : "Create Category" %>
-        </button>
+        <div class="form-actions">
+
+            <button type="submit">
+                <%= isEditing ? "Update Category" : "Create Category" %>
+            </button>
+
+            <a href="/categories" class="btn cancel-btn">Cancel</a>
+
+        </div>
+
     </form>
 
-    <a href="/categories">Cancel</a>
 </main>
 
 <%- include("partials/footer") %>

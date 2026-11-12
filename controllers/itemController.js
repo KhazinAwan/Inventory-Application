@@ -39,6 +39,7 @@ async function createItemGet(req, res) {
     const categories = await db.getAllCategories();
     res.render("itemForm" , {
         categories: categories,
+        item: null,
         isEditing: false
     })
 }
@@ -62,18 +63,39 @@ async function createItemPost(req, res) {
     }
 
     const {category_id, name, description, stock, price, image_url} = matchedData(req);
-    await db.createItem(Number(category_id), name, description, Number(stock), Number(price), image_url);
-    res.redirect("/items");
+
+    try {
+
+        await db.createItem(Number(category_id), name, description, Number(stock), Number(price), image_url);
+        res.redirect("/items");
+    }
+
+    catch(err) {
+
+        if (err.code === "23505") {
+
+        const categories = await db.getAllCategories();
+
+        return res.status(400).render("itemForm", {
+            errors: [{ msg: "An item with this name already exists in this category." }],
+            item: req.body,
+            categories,
+            isEditing: false
+        });
+    }
+
+        next(err);
+    }
 }
 
 async function updateItemGet(req, res) {
 
     const {id} = req.params;
-    const item = db.getItemById(id);
+    const item = await db.getItemById(id);
 
     if(!item) {
 
-        res.status(404).render("404");
+        return res.status(404).render("404");
     }
 
     const categories = await db.getAllCategories();
@@ -104,14 +126,36 @@ async function updateItemPost(req, res) {
 
     const {id} = req.params;
     const {category_id, name, description, stock, price, image_url} = matchedData(req);
-    const item = await db.updateItem(id, Number(category_id), name, description, Number(stock), Number(price), image_url);
 
-    if(!item) {
+    try {
 
-        res.status(404).render("404");
+        const item = await db.updateItem(id, Number(category_id), name, description, Number(stock), Number(price), image_url);
+
+        if(!item) {
+
+            res.status(404).render("404");
+        }
+
+        res.redirect("/items");
     }
 
-    res.redirect("/items");
+    catch(err) {
+
+         if (err.code === "23505") {
+
+            const categories = await db.getAllCategories();
+
+            return res.status(400).render("itemForm", {
+                errors: [{ msg: "An item with this name already exists in this category." }],
+                item: { ...req.body, id },
+                categories,
+                isEditing: true
+            });
+        }
+
+        next(err);
+    }
+ 
 }
 
 async function deleteItem(req, res) {

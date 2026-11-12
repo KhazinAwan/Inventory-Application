@@ -22,7 +22,8 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-    res.status(500).render("error", {
+
+    res.status(500).render("errors", {
         message: "Something went wrong on our server. Please try again later."
     });
 });

@@ -1,24 +1,63 @@
 <%- include("partials/header") %>
+    <main class="container">
 
-<main class="container">
-    <h1><%= category.name %></h1>
+        <div class="page-header">
+            <div>
+                <h1>
+                    <%= category.name %>
+                </h1>
+                <p>
+                    <%= category.description %>
+                </p>
+            </div>
 
-    <p><%= category.description %></p>
+            <div class="actions">
 
-    <div class="category-actions">
-        <a href="/categories/<%= category.id %>/items">
-            View Items
-        </a>
+                <a href="/categories/<%= category.id %>/update" class="btn">
+                    Edit Category
+                </a>
 
-        <a href="/categories/<%= category.id %>/update">
-            Edit Category
-        </a>
+                <form action="/categories/<%= category.id %>/delete" method="POST"
+                    onsubmit="return confirm('Are you sure? Deleting this category will also delete all its items.');">
+                    <button type="submit" class="delete-btn">Delete Category</button>
+                </form>
 
-        <form action="/categories/<%= category.id %>/delete" method="POST"
-              onsubmit="return confirm('Are you sure? Deleting this category will also delete all its items.');">
-            <button type="submit">Delete Category</button>
-        </form>
-    </div>
-</main>
 
-<%- include("partials/footer") %>
+            </div>
+
+        </div>
+
+        <h2>Products</h2>
+
+        <% if (items.length===0) { %>
+            <p class="empty-message">No items in this category yet.</p>
+            <% } else { %>
+                <div class="item-list">
+                    <% items.forEach((item)=> { %>
+                        <article class="item-card">
+
+                            <div class="item-info">
+
+                                <h2>
+                                    <a href="/items/<%= item.id %>">
+                                        <%= item.name %>
+                                    </a>
+                                </h2>
+
+                                <p>Price: $<%= item.price %></p>
+                                <p>Stock: <%= item.stock %></p>
+
+                            </div>
+
+                            <% if (item.image_url) { %>
+                                <img src="<%= item.image_url %>" alt="<%= item.name %>">
+                            <% } %>
+
+                        </article>
+                        <% }) %>
+                </div>
+                <% } %>
+
+    </main>
+
+    <%- include("partials/footer") %>

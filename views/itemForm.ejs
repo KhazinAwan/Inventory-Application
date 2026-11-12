@@ -1,14 +1,14 @@
 <%- include("partials/header") %>
 
-<main class="container">
+<main class="container form-page">
     <h1><%= isEditing ? "Edit Item" : "Add Item" %></h1>
 
     <% if (typeof errors !== "undefined" && errors.length > 0) { %>
-        <ul class="errors">
+        <div class="errors">
             <% errors.forEach((error) => { %>
-                <li><%= error.msg %></li>
+                <p><%= error.msg %></p>
             <% }) %>
-        </ul>
+        </div>
     <% } %>
 
     <form
@@ -86,12 +86,18 @@
             >
         </div>
 
-        <button type="submit">
-            <%= isEditing ? "Update Item" : "Create Item" %>
-        </button>
+        <div class="form-actions">
+
+            <button type="submit">
+                <%= isEditing ? "Update Item" : "Create Item" %>
+            </button>
+
+            <a href="/items" class="btn cancel-btn">Cancel</a>
+
+        </div>
+
     </form>
 
-    <a href="/items">Cancel</a>
 </main>
 
 <%- include("partials/footer") %>

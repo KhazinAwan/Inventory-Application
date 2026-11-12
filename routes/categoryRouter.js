@@ -5,6 +5,15 @@ const categoryValidation = require("../validators/categoryValidator.js");
 
 const categoryRouter = Router();
 
+categoryRouter.param("id", (req, res, next, id) => {
+    
+    if (!/^\d+$/.test(id)) {
+        return res.status(404).render("404");
+    }
+
+    next();
+});
+
 categoryRouter.get("/:id/items", itemController.getCategoryItems);
 
 categoryRouter.get("/", categoryController.getAllCategories);

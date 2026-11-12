@@ -11,19 +11,24 @@ async function getCategoryById(req, res) {
 
     const {id} = req.params;
     const category = await db.getCategoryById(id);
+    const items = await db.getCategoryItems(id);
 
     if(!category) {
 
         return res.status(404).render("404");
     }
 
-    res.render("category" , {category: category});
+    res.render("category" , {
+        category: category,
+        items: items
+    });
     
 }
 
 function createCategoryGet(req, res) {
 
     res.render("categoryForm", {
+        category: null,
         isEditing: false
     });
 }
@@ -42,8 +47,24 @@ async function createCategoryPost(req, res) {
     }
 
     const {name, description} = matchedData(req);
-    await db.createCategory(name, description);
-    res.redirect("/categories");
+
+    try {
+        await db.createCategory(name, description);
+        res.redirect("/categories");
+    }
+    catch(err) {
+        if (err.code === "23505") {
+        return res.status(400).render("categoryForm", {
+            isEditing: false,
+            category: req.body,
+            errors: [{ msg: "A category with this name already exists." }]
+        });
+    }
+
+    next(err);
+
+    }
+
 }
 
 async function updateCategoryGet(req, res) {
@@ -79,16 +100,35 @@ async function updateCategoryPost(req, res) {
 
     const {name, description} = matchedData(req);
 
-    const category = await db.updateCategory(id, name, description);
+    try {
 
-    if(!category) {
+        const category = await db.updateCategory(id, name, description);
 
-        return res.status(404).render("404");
+        if(!category) {
+
+            return res.status(404).render("404");
+        }
+            
+        res.redirect("/categories");
+
     }
-        
-    res.redirect("/categories");
-    
+
+    catch(err) {
+
+        if (err.code === "23505") {
+
+            return res.status(400).render("categoryForm", {
+                errors: [{ msg: "A category with this name already exists." }],
+                category: { ...req.body, id },
+                isEditing: true
+            });
+        }
+
+        next(err);
+    }
+
 }
+
 async function deleteCategory(req, res) {
 
     const {id} = req.params;

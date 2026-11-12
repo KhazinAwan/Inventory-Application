@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS items (
     description VARCHAR ( 255 ),
     stock INTEGER NOT NULL CHECK (stock >= 0 ),
     price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
-    image_url VARCHAR( 255 )
+    image_url VARCHAR( 255 ),
+    UNIQUE (category_id, name)
 
 );
 `;
